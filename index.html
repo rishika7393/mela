@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nominated: every Best Picture nominee you've seen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to films</a>
+
+  <header class="masthead">
+    <div class="masthead-text">
+      <h1 class="wordmark">Nominated</h1>
+      <p class="progress" id="progress" aria-live="polite">Loading films…</p>
+    </div>
+    <div class="strip" id="strip" role="img" aria-label="Films seen"></div>
+  </header>
+
+  <p class="notice" id="notice" hidden></p>
+
+  <nav class="tabs" role="tablist" aria-label="Views">
+    <button class="tab" role="tab" id="tab-all" aria-controls="view-all" aria-selected="true" data-view="all">All films</button>
+    <button class="tab" role="tab" id="tab-queue" aria-controls="view-queue" aria-selected="false" data-view="queue">Watch next <span class="tab-count" id="queueCount"></span></button>
+  </nav>
+
+  <main id="main">
+    <section id="view-all" role="tabpanel" aria-labelledby="tab-all">
+      <div class="filters">
+        <div class="moods" id="moods" role="group" aria-label="Filter by mood"></div>
+        <div class="filter-row">
+          <label class="search">
+            <span class="sr-only">Search films</span>
+            <input type="search" id="search" placeholder="Search title, cast, genre or companion" autocomplete="off">
+          </label>
+          <div class="segmented" id="seenFilter" role="group" aria-label="Show">
+            <button type="button" data-seen="all" aria-pressed="true">All</button>
+            <button type="button" data-seen="unseen" aria-pressed="false">Not seen</button>
+            <button type="button" data-seen="seen" aria-pressed="false">Seen</button>
+          </div>
+          <label class="check"><input type="checkbox" id="winners"> Winners only</label>
+          <label class="sort">
+            <span>Sort by</span>
+            <select id="sort">
+              <option value="year-desc">Newest ceremony</option>
+              <option value="year-asc">Oldest ceremony</option>
+              <option value="imdb">IMDb rating</option>
+              <option value="rt">Rotten Tomatoes</option>
+              <option value="title">Title</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <p class="result-count" id="resultCount" aria-live="polite"></p>
+      <div id="list" class="list"></div>
+    </section>
+
+    <section id="view-queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <p class="queue-hint" id="queueHint">Drag films to reorder, or use the arrows. Marking a film seen takes it off this list.</p>
+      <ol class="queue" id="queue"></ol>
+    </section>
+  </main>
+
+  <dialog class="detail" id="detail" aria-labelledby="dTitle">
+    <div class="detail-inner" id="detailBody"></div>
+  </dialog>
+
+  <dialog class="pass" id="passDialog" aria-labelledby="passTitle">
+    <form method="dialog" id="passForm">
+      <h2 id="passTitle">Enter passcode</h2>
+      <p id="passMsg">This list is private.</p>
+      <label class="field">
+        <span>Passcode</span>
+        <input type="password" id="passInput" required autocomplete="current-password">
+      </label>
+      <div class="actions">
+        <button value="cancel" formnovalidate class="btn ghost">Cancel</button>
+        <button value="ok" class="btn">Unlock</button>
+      </div>
+    </form>
+  </dialog>
+
+  <datalist id="companions"></datalist>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="demo-data.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
