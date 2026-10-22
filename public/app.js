@@ -94,6 +94,9 @@
     });
   }
 
+  // Cancel is a plain button so pressing Enter always unlocks.
+  $("#passCancel").addEventListener("click", () => $("#passDialog").close("cancel"));
+
   // Optimistic update: change local state, then persist. Undo on failure.
   async function save(changes) {
     changes = changes.filter(Boolean);
