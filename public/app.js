@@ -28,6 +28,8 @@
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   };
   const fmtImdb = (v) => (v == null ? "–" : Number(v).toFixed(1));
+  // The list stores the ceremony year; films are released the year before.
+  const releaseYear = (m) => (m.year ? m.year - 1 : "");
   const google = (q) => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
   const formatDate = (iso) => {
     if (!iso) return "";
@@ -58,7 +60,7 @@
   async function request(method, body) {
     const res = await fetch("/api/movies", {
       method,
-      headers: { "Content-Type": "application/json", "x-app-passcode": getPass() },
+      headers: { "Content-Type": "application/json", "x-app-passcode": encodeURIComponent(getPass()) },
       body: body ? JSON.stringify(body) : undefined,
     });
     let data = {};
@@ -85,9 +87,10 @@
     const dlg = $("#passDialog");
     $("#passMsg").textContent = wasWrong ? "That passcode didn't work. Try again." : "This list is private.";
     $("#passInput").value = "";
+    dlg.returnValue = "";
     dlg.showModal();
     return new Promise((resolve) => {
-      dlg.addEventListener("close", () => resolve(dlg.returnValue === "ok" ? $("#passInput").value : null), { once: true });
+      dlg.addEventListener("close", () => resolve(dlg.returnValue === "ok" ? $("#passInput").value.trim() : null), { once: true });
     });
   }
 
@@ -338,8 +341,8 @@
       </div>
       <h2 id="dTitle">${esc(m.title)}</h2>
       <div class="search-links">
-        <a class="search-link" href="${google(m.title)}" target="_blank" rel="noopener">${ICON.search}<span>Google it</span></a>
-        <a class="search-link" href="${google(`${m.title} movie is available on which platform`)}" target="_blank" rel="noopener">${ICON.tv}<span>Where to watch</span></a>
+        <a class="search-link" href="${google(`${m.title} movie ${releaseYear(m)}`)}" target="_blank" rel="noopener">${ICON.search}<span>Google it</span></a>
+        <a class="search-link" href="${google(`${m.title} ${releaseYear(m)} movie is available on which platform`)}" target="_blank" rel="noopener">${ICON.tv}<span>Where to watch</span></a>
       </div>
       <dl class="facts">
         <div><dt>IMDb</dt><dd class="big">${fmtImdb(m.imdb)}</dd></div>
@@ -536,6 +539,7 @@
 
   let toastTimer;
   function toast(msg, isError = false) {
+    if (state.demo && !isError) msg += " Preview only: not saved to Baserow.";
     const el = $("#toast");
     el.textContent = msg;
     el.classList.toggle("error", isError);
