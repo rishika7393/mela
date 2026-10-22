@@ -15,6 +15,8 @@
     up: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 10l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     down: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     close: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    search: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    tv: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3" width="13" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 5.8v3.4L9.5 7.5z" fill="currentColor"/><path d="M5 14h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
     grip: '<svg viewBox="0 0 10 16" aria-hidden="true"><g fill="currentColor"><circle cx="3" cy="3" r="1.3"/><circle cx="7" cy="3" r="1.3"/><circle cx="3" cy="8" r="1.3"/><circle cx="7" cy="8" r="1.3"/><circle cx="3" cy="13" r="1.3"/><circle cx="7" cy="13" r="1.3"/></g></svg>',
   };
 
@@ -26,6 +28,7 @@
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   };
   const fmtImdb = (v) => (v == null ? "–" : Number(v).toFixed(1));
+  const google = (q) => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
   const formatDate = (iso) => {
     if (!iso) return "";
     const d = new Date(iso + "T00:00:00");
@@ -334,6 +337,10 @@
         <button type="button" class="icon-btn" data-action="close" aria-label="Close">${ICON.close}</button>
       </div>
       <h2 id="dTitle">${esc(m.title)}</h2>
+      <div class="search-links">
+        <a class="search-link" href="${google(m.title)}" target="_blank" rel="noopener">${ICON.search}<span>Google it</span></a>
+        <a class="search-link" href="${google(`${m.title} movie is available on which platform`)}" target="_blank" rel="noopener">${ICON.tv}<span>Where to watch</span></a>
+      </div>
       <dl class="facts">
         <div><dt>IMDb</dt><dd class="big">${fmtImdb(m.imdb)}</dd></div>
         <div><dt>Rotten Tomatoes</dt><dd class="big">${m.rt != null ? m.rt + "%" : "–"}</dd></div>
@@ -341,7 +348,7 @@
         <div><dt>Mood</dt><dd style="color:${moodColor(m.mood)}">${esc(m.mood) || "–"}</dd></div>
       </dl>
       <h3>Cast</h3>
-      ${cast.length ? `<ul class="cast">${cast.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>` : `<p class="fact" style="color:var(--muted)">Cast isn't listed yet. Add it in Baserow.</p>`}
+      ${cast.length ? `<ul class="cast">${cast.map((c) => `<li><a href="${google(c)}" target="_blank" rel="noopener" aria-label="Search Google for ${esc(c)}">${esc(c)}</a></li>`).join("")}</ul>` : `<p class="fact" style="color:var(--muted)">Cast isn't listed yet. Add it in Baserow.</p>`}
       ${m.fact ? `<h3>Did you know</h3><p class="fact">${esc(m.fact)}</p>` : ""}
 
       <section class="log" aria-labelledby="logTitle">
