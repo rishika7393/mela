@@ -17,6 +17,7 @@
     close: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
     search: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
     tv: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3" width="13" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 5.8v3.4L9.5 7.5z" fill="currentColor"/><path d="M5 14h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    play: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 5.3v5.4L11 8z" fill="currentColor"/></svg>',
     grip: '<svg viewBox="0 0 10 16" aria-hidden="true"><g fill="currentColor"><circle cx="3" cy="3" r="1.3"/><circle cx="7" cy="3" r="1.3"/><circle cx="3" cy="8" r="1.3"/><circle cx="7" cy="8" r="1.3"/><circle cx="3" cy="13" r="1.3"/><circle cx="7" cy="13" r="1.3"/></g></svg>',
   };
 
@@ -31,6 +32,7 @@
   // The list stores the ceremony year; films are released the year before.
   const releaseYear = (m) => (m.year ? m.year - 1 : "");
   const google = (q) => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+  const stremio = (title) => `https://web.stremio.com/#/search?query=${encodeURIComponent(title)}`;
   const formatDate = (iso) => {
     if (!iso) return "";
     const d = new Date(iso + "T00:00:00");
@@ -346,6 +348,7 @@
       <div class="search-links">
         <a class="search-link" href="${google(`${m.title} movie ${releaseYear(m)}`)}" target="_blank" rel="noopener">${ICON.search}<span>Google it</span></a>
         <a class="search-link" href="${google(`${m.title} ${releaseYear(m)} movie is available on which platform`)}" target="_blank" rel="noopener">${ICON.tv}<span>Where to watch</span></a>
+        <a class="search-link" href="${stremio(m.title)}" target="_blank" rel="noopener">${ICON.play}<span>Stream on Stremio</span></a>
       </div>
       <dl class="facts">
         <div><dt>IMDb</dt><dd class="big">${fmtImdb(m.imdb)}</dd></div>
