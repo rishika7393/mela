@@ -104,8 +104,10 @@ export default async (req) => {
     );
   }
 
-  const passcode = process.env.APP_PASSCODE;
-  if (passcode && req.headers.get("x-app-passcode") !== passcode) {
+  const passcode = (process.env.APP_PASSCODE || "").trim();
+  let sent = req.headers.get("x-app-passcode") || "";
+  try { sent = decodeURIComponent(sent); } catch {}
+  if (passcode && sent.trim() !== passcode) {
     return json({ error: "passcode", message: "Enter the passcode to continue." }, 401);
   }
 
